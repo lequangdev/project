@@ -1,7 +1,7 @@
 <template>
     <div class="container_At-content">
        <div class="container_At-content--main-products">
-            <div  v-for="(product, index) in filteredProducts" :key="index" @click="goProductDetails(product)" class="main-product col-2">
+            <div  v-for="(product, index) in filteredProducts" :key="index" @click="goProductDetails(product.product_id)" class="main-product col-2">
                 <div class="contais_thumbnail"><img class="thumbnail" :src="product.img_name" alt=""></div>
                 <div class="contais_information">
                     <div  class="details">
@@ -26,9 +26,8 @@ export default{
         const store = useStore()
         const router = useRouter()
         const productLimit = ref(54);
-        function goProductDetails(product) {
-            localStorage.setItem("productDetail", JSON.stringify(product))
-            router.push({name: "ProductDetails", params: {}})
+        function goProductDetails(id) {
+            router.push({name: "ProductDetails", params: {id}})
         }
         let products = computed(() => store.getters.productsAll)
         let filteredProducts = computed(() => {
@@ -139,11 +138,10 @@ export default{
     max-height: 38px;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2; /* Số dòng tối đa */
+    -webkit-line-clamp: 2; 
     overflow: hidden;
     text-overflow: ellipsis;
-    max-height: 44px; /* Số dòng * chiều cao của mỗi dòng */
-
+    max-height: 44px; 
 }   
 
 </style>

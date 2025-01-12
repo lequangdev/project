@@ -34,6 +34,8 @@
         <div class="content">
             <div class="avarteUser">
                 <img :src="avatar" alt="avarta">
+                <i @click="selectImage" class="fa-regular fa-image"></i>
+                <input type="file" ref="fileInput" @change="onFileChange" accept="image/*" style="display: none;">
             </div>
             <div class="nameUser">{{ name }}</div>
             <div v-if="role === 'client'" class="userInformation">
@@ -69,16 +71,46 @@ import axios from 'axios';
 import { useRouter } from 'vue-router'
 import HeaderVue from '@/layouts/HeaderVue.vue'
 import { mapGetters } from 'vuex'
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import decodeJWT from '@/commonFunc/jwtDecode';
 import { jwtDecode } from 'jwt-decode';
+import { uploadImage } from "@/cloudinary";
 export default {
     setup() {
         const role = jwtDecode(localStorage.getItem('jwtToken')).user_role
-        const avatar = localStorage.getItem('avatar_url')   
+        const avatar = ref(localStorage.getItem('avatar_url'))   
         const store = useStore()
         const router = useRouter()
+        const fileInput = ref(null);
+        const selectImage = () => {
+            fileInput.value.click(); // Mở hộp thoại chọn tệp
+        };
+        const onFileChange = async (event) => {
+            const file = event.target.files[0];
+            let img_url;
+            if (file) {
+                const imageUrl = await uploadImage([file]);
+                localStorage.setItem('avatar_url', imageUrl[0])
+                img_url = imageUrl[0]
+                avatar.value = imageUrl[0]
+            }
+            let data = {
+                avatar_url: img_url,
+                user_id: localStorage.getItem('user_id')
+            }
+
+            axios({
+                method: "put",
+                url: 'http://localhost:1234/api/Users',
+                data: data
+            })
+            .then(response => {
+            })
+            .catch(error => {
+            });
+        };
+        
         function logout(){
             // xóa jwt cũ
             localStorage.removeItem('jwtToken');
@@ -86,6 +118,8 @@ export default {
             localStorage.removeItem('productInCart');
             // xóa user_id cũ
             localStorage.removeItem('user_id');
+            // avatar default
+            localStorage.setItem('avatar_url', "https://as2.ftcdn.net/jpg/04/10/43/77/1000_F_410437733_hdq4Q3QOH9uwh0mcqAhRFzOKfrCR24Ta.jpg")
             router.push('/Login')
         }
         
@@ -145,7 +179,9 @@ export default {
             goHome,
             OrderPlaced,
             purchaseHistory,
-            toCart,nextPage,role,avatar
+            toCart,nextPage,role,avatar,
+            selectImage, onFileChange,fileInput
+
         }
     },
     computed: {
@@ -185,6 +221,13 @@ export default {
     text-align: center;
     cursor: pointer;
     color: rgb(255, 117, 140);
+}
+.fa-image{
+    position: relative;
+    right: 40px;
+    font-size: 30px;
+    color: rgb(255, 117, 140);
+    cursor: pointer;
 }
 .header{
     font-family: Arial, Helvetica, sans-serif;

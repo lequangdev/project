@@ -8,7 +8,7 @@
                     <div class="title">{{ title }}</div>  
                 </div> 
                 <div class="profile">
-                    <div @click="onProfileUser" class="avatar"><img src="https://tse3.mm.bing.net/th?id=OIP.wUU79RnsVB3zcJjsCPNlAgHaHa&pid=Api&P=0&h=220" alt="avatar"></div>
+                    <div @click="onProfileUser" class="avatar"><img :src="avatar" alt="avatar"></div>
                 </div>
             </div>
         </HeaderVue>
@@ -69,6 +69,7 @@ export default {
         onMounted(() => {
             store.dispatch("getHistoryByID")
         })
+        const avatar = localStorage.getItem("avatar_url")
         function backPage(){
             window.history.back();
         }
@@ -103,7 +104,8 @@ export default {
         }
         return {
             introduce, title,
-            productsOrder, pageHome, backPage, statusText, statusClass
+            productsOrder, pageHome, backPage, statusText, statusClass,
+            avatar
         }
     },
     components: {

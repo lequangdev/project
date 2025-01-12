@@ -123,11 +123,17 @@ namespace DataAccessLayer
 
 
         }
-        // xóa một bản ghi kèm kiểm tra xem có xóa vào địa chỉ mặc định không
-        public virtual bool DeleteByID(Guid address_id)
+        public MySqlConnection Connection()
         {
             MySqlConnection connection = new MySqlConnection("server=localhost;Port=3307;user=root;password=12345678;database=quangdeptrai");
             connection.Open();
+            return connection;
+        }
+        // xóa một bản ghi kèm kiểm tra xem có xóa vào địa chỉ mặc định không
+        public virtual bool DeleteByID(Guid address_id)
+        {
+            MySqlConnection connection = Connection();
+
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("address_id", address_id);
             var sqluser_id = "SELECT user_id FROM address u WHERE u.address_id = @address_id;";

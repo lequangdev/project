@@ -43,7 +43,7 @@ const routes = [
     },
     {
         
-        path:"/ProductDetails",
+        path:"/ProductDetails/:id",
         name:"ProductDetails",  
         meta: {
         },

@@ -123,6 +123,12 @@ namespace BussenisLogicLayer
                 return message;
             }
         }
+        public bool UpdateByID(UserEntity data)
+        {
+            UserEntity newData = _repo.GetFistByID(data.user_id);
+            newData.avatar_url = data.avatar_url; 
+            return _repo.UpdateByID(newData);
+        }
         
 
     }

@@ -20,6 +20,7 @@ namespace DataAccessLayer
         bool InsertList(List<TEntity> models);
         bool DeleteByTable(Guid? id, string table);
         public List<TEntity> GetRecordByColumn(ColumnValueDTO param);
+        public TEntity GetFistByID(Guid? id);
     }
 }
 

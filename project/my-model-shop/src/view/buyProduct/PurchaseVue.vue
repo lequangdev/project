@@ -12,7 +12,7 @@
                     <i class="fa-solid fa-house"></i>
                     </div>
                     <div class="profile">
-                        <div @click="onProfileUser" class="avatar"><img src="https://tse3.mm.bing.net/th?id=OIP.wUU79RnsVB3zcJjsCPNlAgHaHa&pid=Api&P=0&h=220" alt="avatar"></div>
+                        <div @click="onProfileUser" class="avatar"><img :src="avatar" alt="avatar"></div>
                     </div>
                 </div>
             </div>
@@ -90,6 +90,7 @@ export default {
     setup() {
         const route = useRouter()
         let store = useStore()
+        const avatar = localStorage.getItem("avatar_url")
         onMounted(() => {
             store.dispatch("getAddressDefault")
         })
@@ -157,7 +158,8 @@ export default {
         return {
             introduce, title, quantityProductBuy, sumPrice, 
             checkedItems, cart, orders, 
-            toPageListAddress, addressDefault,toPageInsertAddress,onProfileUser,pageHome,backPage
+            toPageListAddress, addressDefault,toPageInsertAddress,onProfileUser,pageHome,backPage,
+            avatar
         }
     },
     components: {

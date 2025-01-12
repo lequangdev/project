@@ -19,7 +19,7 @@
                     <i @click="purchaseHistory" class="fa-solid fa-clock-rotate-left"></i>
                 </div>
                 <div title="Thông báo"  class="notification"><i class="fa-solid fa-bell"></i></div>
-                <div @click="onProfileUser" class="avatar"><img src="https://tse3.mm.bing.net/th?id=OIP.wUU79RnsVB3zcJjsCPNlAgHaHa&pid=Api&P=0&h=220" alt="avatar"></div>
+                <div @click="onProfileUser" class="avatar"><img :src="avatar" alt="avatar"></div>
             </div>
         </HeaderVue>
         <NavigationBarVue>
@@ -52,6 +52,7 @@ export default {
     setup() {
         
         const token = localStorage.getItem('jwtToken')
+        const avatar = localStorage.getItem("avatar_url")
         let role
         if(token){
             role = jwtDecode(token).user_role
@@ -104,7 +105,7 @@ export default {
             toCart,
             OrderPlaced,
             purchaseHistory,
-            role
+            role, avatar
         }
 
     },

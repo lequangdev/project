@@ -49,13 +49,20 @@ import PasswordRetrieval from '@/components/PasswordRetrieval.vue'
 import PageDisplayBar from '@/layouts/PageDisplayBar.vue'
 import InputVue from '@/components/InputVue.vue'
 import { user } from './registerData'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 export default {
     setup() {
         const userSetup = user
         const pageName = 'Đăng ký'   
+        const router = useRouter();
         const introduce = "Nền tảng thương mại chuyên các mặt hàng về mô hình hot hiện nay"
         let message = ref()
+        onMounted(() => {
+            if(localStorage.user_id){
+                router.push("/")
+            }
+        })
         function onSubmit(user){
             if(isObjectEmpty(user)){
                 message.value = 'Vui lòng nhập đủ các trường !'

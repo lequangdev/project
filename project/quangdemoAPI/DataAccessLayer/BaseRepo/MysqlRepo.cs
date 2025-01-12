@@ -224,6 +224,17 @@ namespace DataAccessLayer
             connection.Close();
             return res;
         }
+        public virtual TEntity GetFistByID(Guid? id)
+        {
+            string tableIDName = _tableName + "_id";
+            MySqlConnection connection = new MySqlConnection("server=localhost;Port=3307;user=root;password=12345678;database=quangdeptrai");
+            connection.Open();
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add(tableIDName, id);
+            var res = connection.QueryFirstOrDefault<TEntity>($"SELECT * FROM {_tableName} u WHERE @{tableIDName} = {tableIDName};", parameters);
+            connection.Close();
+            return res;
+        }
 
     }
 }

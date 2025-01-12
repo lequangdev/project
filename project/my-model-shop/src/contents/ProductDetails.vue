@@ -72,29 +72,23 @@
 </template>
 
 <script>
-import { ref, computed, watch } from "vue"
+import { ref, computed, watch, onMounted } from "vue"
 import ProductsVue from "./ProductsVue.vue"
 import {  } from "./ProductsVue.vue"
 import axios from "axios"
-import { useRouter } from "vue-router"
+import { useRouter, useRoute } from "vue-router"
 import { useStore } from 'vuex'
 import { mapGetters } from 'vuex'
 export default {
-        setup() {
+    setup() {
+        onMounted(() => {
+            getProductByID(product_id)
+        })
         const store = useStore()
         const router = useRouter()
-        axios({
-            method: "get",
-            url: 'http://localhost:1234/api/products/GetAll', 
-        })
-        .then(response => {
-            localStorage.setItem('productSell',JSON.stringify(response.data))
-        })
-        .catch(error => {
-            console.log("thất bại")
-        });
+        const route = useRoute()
         let products = JSON.parse(localStorage.getItem("productSell"))
-
+        let product_id = route.params.id
         // Sử dụng ref để theo dõi vị trí hiện tại của danh sách ảnh
         const startIndex = ref(0)
         const endIndex = ref(5)
@@ -103,22 +97,44 @@ export default {
         const productsData = ref(products.slice(startIndex.value, endIndex.value))
         // thông tin sản phẩm
         let product = {
-            selectedImage:ref(JSON.parse(localStorage.getItem("productDetail")).img_name),
+            selectedImage:ref(''),
             //giá
-            prices:ref(JSON.parse(localStorage.getItem("productDetail")).product_price),
+            prices:ref('1'),
             // tiêu đề sản phẩm
-            titleProduct:ref(JSON.parse(localStorage.getItem("productDetail")).product_name),
-            product_id:ref(JSON.parse(localStorage.getItem("productDetail")).product_id),
+            titleProduct:ref(''),
+            product_id:ref(''),
             // số lượng còn lại
-            remaining: ref(JSON.parse(localStorage.getItem("productDetail")).product_quantity),
+            remaining: ref(''),
             // số lượng mặc định
             quantity: ref(1)
         }
+        watch(() => route.params.id,(newID) => {
+            getProductByID(newID)
+        })
+        function getProductByID(newID){
+            axios({
+                method: "Get",
+                url: 'http://localhost:1234/api/products/GetAllByID', 
+                params: {
+                    id: newID
+                }
+            })
+            
+            .then(response => {  
+                product.selectedImage.value = response.data[0].img_name
+                product.prices.value = response.data[0].product_price
+                product.remaining.value = response.data[0].product_quantity
+                product.product_id.value = response.data[0].product_id
+                product.titleProduct.value = response.data[0].product_name
+
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
 
         // tên cửa hàng
-        const nameStore = "wang"
-        // cửa hàng đã online
-        const storeOnline = "Đã online 5 phút trước"
+        const nameStore = "wang";
         // ảnh đại diện cửa hàng
         const imgStore = "https://down-vn.img.susercontent.com/file/vn-11134216-7qukw-lkdr1y5phuho8a_tn"
         // số lượng còn lại
@@ -155,6 +171,7 @@ export default {
             product.product_id.value = productId
             changeTitle(title)
             addPrice(price)
+            router.push({name: "ProductDetails", params: {id:productId}})
         };
        
         // let page buy
@@ -182,7 +199,7 @@ export default {
 
         //hàm thêm chấm ngăn cách 3 số cho giá thành
         const formattedPrice = computed(() => {
-            
+
             return product.prices.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " Đ";
         })
         
@@ -226,11 +243,12 @@ export default {
             onBlurIp,
             nameStore,
             imgStore,
-            storeOnline,
+
             addToCart,
             products,
             formattedPrice,
-            letPageBuy
+            letPageBuy,
+
         };    
     },
     components:{
@@ -337,10 +355,10 @@ button:last-child {
     height: 48px;
     font-size: 20px;
     text-overflow:ellipsis;
-    display: -webkit-box; /* Sử dụng flexbox của WebKit */
-    -webkit-box-orient: vertical; /* Xếp theo chiều dọc */
-    -webkit-line-clamp: 2; /* Số dòng tối đa */
-    overflow: hidden; /* Ẩn phần dư thừa */
+    display: -webkit-box; 
+    -webkit-box-orient: vertical; 
+    -webkit-line-clamp: 2; 
+    overflow: hidden; 
 }
 .assessmentInformation{
     display: flex;

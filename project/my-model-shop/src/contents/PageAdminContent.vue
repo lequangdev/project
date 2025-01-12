@@ -59,7 +59,8 @@ export default {
                     product_name: product_name.value,
                     product_price: product_price.value || 1,
                     product_quantity: quantity.value || 1,
-                    img_name:url
+                    img_name:url,
+                    product_status: 1
                 } 
 
             axios({
@@ -70,6 +71,7 @@ export default {
             .then(response => {
                 console.log("thành công");
                 store.dispatch("getAllProduct")
+                alert('Đã thêm mới một sản phẩm')
             })
             .catch(error => {
                 console.log(error);

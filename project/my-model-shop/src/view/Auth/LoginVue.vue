@@ -39,7 +39,7 @@ import { useRouter } from 'vue-router';
 import { user } from './loginData';
 import decodeJWT from '@/commonFunc/jwtDecode';
 import { jwtDecode } from 'jwt-decode';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 export default {
     setup() {
@@ -50,7 +50,11 @@ export default {
         let userCheck = user
         let inforUser;
         let messageLogin = ref(false);
-
+        onMounted(() => {
+            if(localStorage.user_id){
+            router.push("/")
+        }
+        })
         function onSubmit(user){
             messageLogin.value = false
             pageName = 'Loading...'; 

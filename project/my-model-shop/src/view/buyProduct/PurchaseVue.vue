@@ -141,6 +141,7 @@ export default {
             .then(response => {     
                 console.log(response.status);
                 if(response.data){
+                    cart = []
                     route.push("/OrderPlaced")
                 }
             })

@@ -74,7 +74,6 @@
 <script>
 import { ref, computed, watch, onMounted } from "vue"
 import ProductsVue from "./ProductsVue.vue"
-import {  } from "./ProductsVue.vue"
 import axios from "axios"
 import { useRouter, useRoute } from "vue-router"
 import { useStore } from 'vuex'
@@ -94,7 +93,7 @@ export default {
         const endIndex = ref(5)
         // sự khác biệt giữa các mẫu
         const sampleTitles = ref("Tỉ lệ:")
-        const productsData = ref(products.slice(startIndex.value, endIndex.value))
+        const productsData = computed(() => store.getters.productsAll.filter(product => product.product_status === 1).slice(0, 5))
         // thông tin sản phẩm
         let product = {
             selectedImage:ref(''),

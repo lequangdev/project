@@ -86,14 +86,13 @@ export default {
         const store = useStore()
         const router = useRouter()
         const route = useRoute()
-        let products = JSON.parse(localStorage.getItem("productSell"))
+        
         let product_id = route.params.id
-        // Sử dụng ref để theo dõi vị trí hiện tại của danh sách ảnh
+        const productsData = computed(() => store.getters.productsAll.filter(product => product.product_status === 1).slice(0, 5))
         const startIndex = ref(0)
         const endIndex = ref(5)
         // sự khác biệt giữa các mẫu
         const sampleTitles = ref("Tỉ lệ:")
-        const productsData = computed(() => store.getters.productsAll.filter(product => product.product_status === 1).slice(0, 5))
         // thông tin sản phẩm
         let product = {
             selectedImage:ref(''),
@@ -244,7 +243,6 @@ export default {
             imgStore,
 
             addToCart,
-            products,
             formattedPrice,
             letPageBuy,
 
